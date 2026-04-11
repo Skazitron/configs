@@ -5,5 +5,5 @@ Feel free to use them to your liking.
 ### To use them (kitty, mpv, nvim)
 
 ```bash
-mv configs/* /home/$(whomai)/.configs/ 
+mv configs/* $HOME/.configs/
 ```
