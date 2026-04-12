@@ -87,11 +87,13 @@ require("lazy").setup({
         words = { enabled = true },
       },
       keys = {
-        { "<leader><Tab>", function() Snacks.picker.smart() end,     desc = "Smart Find Files" },
-        { "<leader>w",     function() Snacks.picker.grep_word() end, desc = "Grep Word/Selection", mode = { "n", "x" } },
-        { "<leader>g",     function() Snacks.picker.grep() end,      desc = "Grep Workspace" },
-        { "<leader>e",     function() Snacks.explorer() end,         desc = "File Explorer" },
-        { "<leader>lg",    function() Snacks.lazygit() end,          desc = "Lazygit" },
+        { "<leader><Tab>", function() Snacks.picker.smart() end,           desc = "Smart Find Files" },
+        { "<leader>w",     function() Snacks.picker.grep_word() end,       desc = "Grep Word/Selection",   mode = { "n", "x" } },
+        { "<leader>g",     function() Snacks.picker.grep() end,            desc = "Grep Workspace" },
+        { "<leader>e",     function() Snacks.explorer() end,               desc = "File Explorer" },
+        { "<leader>lg",    function() Snacks.lazygit() end,                desc = "Lazygit" },
+        { "<leader>s",     function() Snacks.picker.lsp_references() end,  desc = "Search/Grep Project" },
+        { "<leader>i",     function() Snacks.picker.lsp_definitions() end, desc = "Search LSP definitions" },
       },
     },
 
