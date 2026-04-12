@@ -25,11 +25,30 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
   spec = {
     -- 1. Modern Utilities & Pickers
+    --
+    {
+      "ThePrimeagen/refactoring.nvim",
+      dependencies = {
+        "nvim-lua/plenary.nvim",
+        "nvim-treesitter/nvim-treesitter",
+      },
+      lazy = false,
+      opts = {},
+      keys = {
+        {
+          "<leader>r",
+          function() require('refactoring').select_refactor() end,
+          mode = { "n", "x" },
+          desc = "Open Refactor Menu",
+        },
+      },
+    },
     {
       "folke/snacks.nvim",
       priority = 1000,
       lazy = false,
       opts = {
+        rename = { enabled = true },
         styles = {
           default = { backdrop = false },
           picker = {
@@ -128,8 +147,23 @@ require("lazy").setup({
           }
         })
 
+        local capabilities = vim.tbl_deep_extend(
+          "force",
+          {},
+          vim.lsp.protocol.make_client_capabilities(),
+          has_blink and blink.get_lsp_capabilities() or {},
+          {
+            workspace = {
+              fileOperations = {
+                willRename = true,
+                didRename = true,
+              },
+            },
+          }
+        )
+
         -- 2. Define your languages
-        local servers = { "lua_ls", "rust_analyzer", "gopls", "pyright", "clangd", "svelte", "ts_ls", "eslint",
+        local servers = { "lua_ls", "rust_analyzer", "gopls", "pyright", "clangd", "svelte", "vtsls", "eslint",
           "tailwindcss" }
 
         -- 3. Tell Mason to install them
@@ -143,7 +177,15 @@ require("lazy").setup({
           "force",
           {},
           vim.lsp.protocol.make_client_capabilities(),
-          has_blink and blink.get_lsp_capabilities() or {}
+          has_blink and blink.get_lsp_capabilities() or {},
+          {
+            workspace = {
+              fileOperations = {
+                willRename = true,
+                didRename = true,
+              },
+            },
+          }
         )
 
         -- 5. Wire them up using Neovim 0.11 Native APIs!
@@ -307,7 +349,6 @@ require("lazy").setup({
           separator_selected = { fg = "#E85A84", bg = "NONE" },
           indicator_selected = { fg = "#E85A84", bg = "#E85A84" },
 
-          -- --- THE FIX: Transparent Diagnostics & Modified Icons ---
           -- Inactive Tab Diagnostics
           diagnostic = { bg = "NONE" },
           warning = { bg = "NONE" },

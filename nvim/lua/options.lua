@@ -109,3 +109,32 @@ vim.keymap.set("n", "<A-w>", "<cmd>qa<CR>", { desc = "Close all" })
 vim.opt.fillchars:append({ eob = " " })
 
 vim.opt.mousemoveevent = true
+
+
+vim.api.nvim_create_autocmd("User", {
+  pattern = "VeryLazy",
+  once = true,
+  callback = function()
+    local orig = Snacks.rename.on_rename_file
+    Snacks.rename.on_rename_file = function(from, to, rename)
+      vim.ui.select({ "Yes", "No" }, {
+        prompt = "Update imports for renamed file?",
+      }, function(choice)
+        orig(from, to, rename)
+        if choice ~= "Yes" then return end
+        vim.schedule(function()
+          for _, client in ipairs(vim.lsp.get_clients()) do
+            local caps = (client.server_capabilities.workspace or {}).fileOperations
+            if caps and caps.didRename then
+              client:notify("workspace/didRenameFiles", {
+                files = {
+                  { oldUri = vim.uri_from_fname(from), newUri = vim.uri_from_fname(to) },
+                },
+              })
+            end
+          end
+        end)
+      end)
+    end
+  end,
+})
