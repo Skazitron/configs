@@ -25,7 +25,6 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
   spec = {
     -- 1. Modern Utilities & Pickers
-    --
     {
       "ThePrimeagen/refactoring.nvim",
       dependencies = {
@@ -461,6 +460,14 @@ require("lazy").setup({
         suppressed_dirs = { "~/", "~/Projects", "~/Downloads", "/" },
         -- log_level = 'debug',
       },
+      {
+        "hasansujon786/super-kanban.nvim",
+        dependencies = {
+          "folke/snacks.nvim",    -- [required]
+          "nvim-orgmode/orgmode", -- [optional] Org format support
+        },
+        opts = {},                -- optional: pass your config table here
+      }
     },
   },
   install = { colorscheme = { "oh-lucy-evening" } },
