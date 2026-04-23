@@ -149,28 +149,12 @@ require("lazy").setup({
           }
         })
 
-        local capabilities = vim.tbl_deep_extend(
-          "force",
-          {},
-          vim.lsp.protocol.make_client_capabilities(),
-          has_blink and blink.get_lsp_capabilities() or {},
-          {
-            workspace = {
-              fileOperations = {
-                willRename = true,
-                didRename = true,
-              },
-            },
-          }
-        )
-
         -- 2. Define your languages
-        local servers = { "lua_ls", "rust_analyzer", "gopls", "pyright", "clangd", "svelte", "vtsls", "eslint",
-          "tailwindcss" }
+        local servers = { "lua_ls", "rust_analyzer", "gopls", "pyright", "clangd", "svelte", "vtsls", "tailwindcss" }
 
-        -- 3. Tell Mason to install them
+        -- 3. Tell Mason to install them (include eslint here so Mason still manages the binary)
         require("mason-lspconfig").setup({
-          ensure_installed = servers
+          ensure_installed = vim.list_extend(vim.deepcopy(servers), { "eslint" })
         })
 
         -- 4. Get Autocompletion Capabilities (Safely)
@@ -190,15 +174,29 @@ require("lazy").setup({
           }
         )
 
-        -- 5. Wire them up using Neovim 0.11 Native APIs!
+        -- 5. Wire up generic servers
         for _, server in ipairs(servers) do
-          -- Pass your blink.cmp capabilities to the native config
           vim.lsp.config(server, {
             capabilities = capabilities
           })
-          -- Turn the server on!
           vim.lsp.enable(server)
         end
+
+        -- 6. ESLint needs its own root_dir to avoid the "paths[0]" error
+        vim.lsp.config("eslint", {
+          capabilities = capabilities,
+          root_dir = function(bufnr, on_dir)
+            local fname = vim.api.nvim_buf_get_name(bufnr)
+            local dir = vim.fs.dirname(fname)
+            local match = vim.fs.find({
+              "eslint.config.js", "eslint.config.mjs", "eslint.config.cjs",
+              ".eslintrc.js", ".eslintrc.json", ".eslintrc.yaml", ".eslintrc.yml", ".eslintrc",
+              "package.json",
+            }, { path = dir, upward = true })[1]
+            on_dir(match and vim.fs.dirname(match) or vim.fn.getcwd())
+          end,
+        })
+        vim.lsp.enable("eslint")
       end,
     },
     -- 4. Completion (Blink)
@@ -314,16 +312,16 @@ require("lazy").setup({
           -- 2. Clean up the icons
           buffer_close_icon = '󰅖',
           modified_icon = '●',
-          close_icon = '',
-          left_trunc_marker = '',
-          right_trunc_marker = '',
+          close_icon = '',
+          left_trunc_marker = '',
+          right_trunc_marker = '',
           always_show_bufferline = true,
           show_close_icon = false, -- Hides the weird global close button in the top right
 
           -- 3. Diagnostics Integration: Shows LSP errors directly on the tab
           diagnostics = "nvim_lsp",
           diagnostics_indicator = function(count, level, diagnostics_dict, context)
-            local icon = level:match("error") and " " or " "
+            local icon = level:match("error") and " " or " "
             return " " .. icon .. count
           end,
 

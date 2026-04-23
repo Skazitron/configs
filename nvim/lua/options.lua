@@ -138,3 +138,5 @@ vim.api.nvim_create_autocmd("User", {
     end
   end,
 })
+
+vim.keymap.set({ "n", "v" }, "<leader>a", vim.lsp.buf.code_action, { desc = "Code Action" })
