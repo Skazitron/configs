@@ -21,6 +21,7 @@
   "orgmode": { "branch": "master", "commit": "a214db3c8ed7eb68cb74924575b91ffc658e7d82" },
   "plenary.nvim": { "branch": "master", "commit": "74b06c6c75e4eeb3108ec01852001636d85a932b" },
   "refactoring.nvim": { "branch": "master", "commit": "6784b54587e6d8a6b9ea199318512170ffb9e418" },
+  "scrollEOF.nvim": { "branch": "master", "commit": "e462b9a07b8166c3e8011f1dcbc6bf68b67cd8d7" },
   "snacks.nvim": { "branch": "main", "commit": "ad9ede6a9cddf16cedbd31b8932d6dcdee9b716e" },
   "super-kanban.nvim": { "branch": "main", "commit": "fbddd3f48bf672dab1fc6ca26424f3a158623be9" },
   "todo-comments.nvim": { "branch": "main", "commit": "31e3c38ce9b29781e4422fc0322eb0a21f4e8668" },

@@ -235,7 +235,7 @@ require("lazy").setup({
           ensure_installed = {
             'rust', 'javascript', 'typescript', 'tsx', 'zig', 'lua', 'go', 'gomod', 'gowork', 'gotmpl',
             'c', 'cpp', 'python', 'html', 'java', 'json', 'markdown', 'svelte',
-            'yaml', 'css', 'bash',
+            'yaml', 'css', 'bash', 'proto',
           },
           -- Satisfies the LuaLS TSConfig warnings
           sync_install = false,
@@ -460,15 +460,28 @@ require("lazy").setup({
         suppressed_dirs = { "~/", "~/Projects", "~/Downloads", "/" },
         -- log_level = 'debug',
       },
-      {
-        "hasansujon786/super-kanban.nvim",
-        dependencies = {
-          "folke/snacks.nvim",    -- [required]
-          "nvim-orgmode/orgmode", -- [optional] Org format support
-        },
-        opts = {},                -- optional: pass your config table here
-      }
     },
+    {
+      "hasansujon786/super-kanban.nvim",
+      dependencies = {
+        "folke/snacks.nvim",    -- [required]
+        "nvim-orgmode/orgmode", -- [optional] Org format support
+      },
+      opts = {},                -- optional: pass your config table here
+    },
+    {
+      "Aasim-A/scrollEOF.nvim",
+      event = { "CursorMoved", "WinScrolled" },
+      opts = {
+        insert_mode = true,
+        disabled_filetypes = {
+          -- It's highly recommended to disable this for terminals,
+          -- especially since your config utilizes `snacks.nvim`
+          "snacks_terminal",
+          "terminal",
+        },
+      },
+    }
   },
   install = { colorscheme = { "oh-lucy-evening" } },
   checker = { enabled = false },
